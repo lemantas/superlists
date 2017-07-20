@@ -27,7 +27,7 @@ class NewVisitorTest(unittest.TestCase):
 			'Enter a to-do item'
 		)
 		
-		# Type in text
+		# Type in text for the first element
 		inputbox.send_keys('Buy peacock feathers')
 		
 		# After hitting enter the page updates with a new item in a to-do list
@@ -35,12 +35,27 @@ class NewVisitorTest(unittest.TestCase):
 		
 		table = self.browser.find_element_by_id('id_list_table')
 		rows = table.find_elements_by_tag_name('tr')
-		self.assertTrue(
-			any(row.text == '1: Buy peacock feathers' for row in rows),
-			"New to-do item did not appear in table"
+		self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+		
+		# Type in some more text for the second element
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		inputbox.send_keys('Use peacock feathers to make a fly')
+		inputbox.send_keys(Keys.ENTER)
+		
+		# Check it the table was updated properly
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_elements_by_tag_name('tr')
+		
+		# check for two items
+		self.assertIn('1: Buy peacock feathers', 
+			[row.text for row in rows]
+		)
+		self.assertIn(
+			'2: use peacock feathers to make a fly',
+			[row.text for row in rows]
 		)
 		
-		# Enter a second item
+		# proceed with tests here
 		self.fail('Finish the test!')
 
 if __name__ == '__main__':
