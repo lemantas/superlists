@@ -11,7 +11,7 @@ class ItemValidationTest(FunctionalTest):
 		inputbox.send_keys('\n')
 		inputbox.submit()
 		import time
-		time.sleep(1)
+		time.sleep(2)
 
 		# Test error message for imputing blank items
 		error = self.browser.find_element_by_css_selector('.has-error')
@@ -40,3 +40,20 @@ class ItemValidationTest(FunctionalTest):
 		self.wait_for_row_in_list_table('1: Buy milk') 
 		self.wait_for_row_in_list_table('2: Make tea')
 
+	def test_cannot_add_multiple_items(self):
+		# Editute goes to home page and starts a new list
+		self.browser.get(self.server_url)
+		itembox = self.get_item_input_box()
+		itembox.send_keys("Buy wellies")
+		itembox.submit()
+		self.wait_for_row_in_list_table("1: Buy wellies")
+
+		# She accidentally tires to enter a duplicate item
+		itembox = self.get_item_input_box()
+		itembox.send_keys("Buy wellies")
+		itembox.submit()
+		
+		# She sees a helpful error message
+		self.wait_for_row_in_list_table("1: Buy wellies")	
+		error = self.browser.find_element_by_css_selector(".has-error")
+		self.assertEqual(error.text, "You've already got this in your list")
