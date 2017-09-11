@@ -1,5 +1,6 @@
 from unittest import skip
 from .base import FunctionalTest
+import time
 
 
 class ItemValidationTest(FunctionalTest):
@@ -10,7 +11,6 @@ class ItemValidationTest(FunctionalTest):
 		inputbox = self.get_item_input_box()
 		inputbox.send_keys('\n')
 		inputbox.submit()
-		import time
 		time.sleep(2)
 
 		# Test error message for imputing blank items
@@ -30,6 +30,7 @@ class ItemValidationTest(FunctionalTest):
 
 		# She receives a similar warning
 		self.wait_for_row_in_list_table('1: Buy milk')
+		time.sleep(2)
 		error = self.browser.find_element_by_css_selector('.has-error')
 		self.assertEqual(error.text, "You can't have an empty list item")
 
@@ -56,4 +57,5 @@ class ItemValidationTest(FunctionalTest):
 		# She sees a helpful error message
 		self.wait_for_row_in_list_table("1: Buy wellies")	
 		error = self.browser.find_element_by_css_selector(".has-error")
-		self.assertEqual(error.text, "You've already got this in your list")
+		time.sleep(2)
+		self.assertEqual(error.text, "You have already got this in your list")
